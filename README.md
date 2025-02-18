@@ -19,3 +19,8 @@ Just above, Output filename format, replace gcode for gx.
 Save your profile.
 
 Enjoy!
+
+### Compatibility
+
+This was tested on an Adventurer 4 only but it should work on other Flashforge printers. 
+Please report any issues.
