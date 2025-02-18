@@ -9,7 +9,7 @@ Inspired by many users, I developed a python script converting Orcaslicer Gcode 
 
 ## How to Install
 
-Download the zip file and save the included anywhere you want.
+Download the zip file and extract the included exe file anywhere you want.
 
 In Orcaslicer, go to Process, under the Other Tab, scroll down to the _Post-Processing Script_ box.
 In the box, insert "path/to/orca_gcode_to_gx.exe";
