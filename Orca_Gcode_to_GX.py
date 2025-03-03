@@ -1,5 +1,5 @@
 # Author: Urself25 (Modified for OrcaSlicer)
-# Date: February 18, 2025
+# Date: March 2, 2025
 # Description: Post-processing script for OrcaSlicer to convert G-code to FlashForge-compatible GX files in-place.
 # License: GPLv3
 
@@ -22,6 +22,8 @@ class GXWriter:
         self.print_speed = 60
         self.bed_temp = 0
         self.print_temp = 0
+        self.multi_extruder_type = 0  # Force single extruder
+        self.filament_usage_left = 0  # Ensure single-extruder format
 
         self.load_gcode()
         self.extract_metadata()
@@ -32,9 +34,12 @@ class GXWriter:
         try:
             with open(self.gcode_path, "r", encoding="utf-8", errors="ignore") as file:
                 self.gcode = file.readlines()
-            # Ensure the first tool selection command is T0
-            if not any(line.startswith('T0') for line in self.gcode[:10]):
-                self.gcode.insert(0, 'T0 ; Set primary extruder')
+            
+            # Ensure T0 is placed after "; Executable_black_start"
+            for i, line in enumerate(self.gcode):
+                if line.strip() == "; Executable_black_start":
+                    self.gcode.insert(i + 1, "T0 ; Set primary extruder\n")
+                    break
         except Exception as e:
             print(f"Error loading G-code: {e}")
             self.gcode = []
@@ -55,15 +60,15 @@ class GXWriter:
                 self.print_time = h * 3600 + m * 60 + s
             elif line.startswith('; filament used [mm] ='):
                 self.filament_usage = int(float(line.split('=')[1].strip()))
-                self.filament_usage_left = 0  # Ensure single-extruder format
+                self.filament_usage_left = 0  # Force single-extruder format
             elif line.startswith('; layer_height ='):
                 self.layer_height = int(float(line.split('=')[1].strip()) * 1000)
             elif line.startswith('; machine_max_speed_x ='):
                 self.print_speed = int(line.split('=')[1].strip())
             elif line.startswith('; first_layer_bed_temperature ='):
-                self.bed_temp = int(line.split('=')[1].strip())  # °C will be added when written
+                self.bed_temp = int(line.split('=')[1].strip())
             elif line.startswith('; nozzle_temperature ='):
-                self.print_temp = int(line.split('=')[1].strip())  # °C will be added when written
+                self.print_temp = int(line.split('=')[1].strip())
     
     def extract_and_convert_thumbnail(self):
         """Extract PNG thumbnail from G-code and convert it to BMP format."""
@@ -105,7 +110,7 @@ class GXWriter:
         gcode_bytes = "".join(self.gcode).encode('latin-1')
         buff = b"xgcode 1.0\n\0"
         buff += struct.pack("<4i", 0, 58, 14512, 14512)
-        buff += struct.pack("<iiih", max(self.print_time, 1), self.filament_usage, self.filament_usage, 0)
+        buff += struct.pack("<iiih", max(self.print_time, 1), self.filament_usage, self.filament_usage_left, self.multi_extruder_type)
         buff += struct.pack("<8h", self.layer_height, 0, 2, self.print_speed, self.bed_temp, self.print_temp, 0, 1)
         buff += self.bmp
         buff += gcode_bytes
@@ -132,4 +137,3 @@ if __name__ == "__main__":
     
     writer = GXWriter(input_gcode)
     writer.save_gx()
-
