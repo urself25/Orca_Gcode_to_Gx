@@ -14,9 +14,9 @@ Download the zip file and extract the included exe file anywhere you want.
 In Orcaslicer, go to Process, under the Other Tab, scroll down to the _Post-Processing Script_ box.
 In the box, insert "path/to/orca_gcode_to_gx.exe";
 
-**Single extruder printer must use the file: Orca_Gcode_to_Gx.exe**
+- **Single extruder printer must use the file: Orca_Gcode_to_Gx.exe**
 
-**Dual extruder printer must use the file: Orca_Gcode_to_Gx_DualExt.exe**
+- **Dual extruder printer must use the file: Orca_Gcode_to_Gx_DualExt.exe**
 
 Just above, Output filename format, replace gcode for gx.
 
