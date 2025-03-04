@@ -4,7 +4,7 @@ Executable Python script converting Gcode to Flashforge Gx for Orcaslicer
 ## Description
 Inspired by many users, I developed a python script converting Orcaslicer Gcode files to Flashforge Gx format.
 
--Add the necessary binary header for Gx files.
+- Add the necessary binary header for Gx files.
 - It converts the included PNG thumbnails into the appropriate bitmap format.
 - Reports the Time to print, bed and nozzle temp, the speed and lenght of filament used.
 
