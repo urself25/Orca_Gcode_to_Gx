@@ -1,3 +1,5 @@
+## Looking to transfer this project has I don'T have a FF AD4 ##
+
 # Orca_Gcode_to_Gx
 Executable Python script converting Gcode to Flashforge Gx for Orcaslicer
 
