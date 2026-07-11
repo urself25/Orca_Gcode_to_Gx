@@ -35,9 +35,9 @@ class GXWriter:
             with open(self.gcode_path, "r", encoding="utf-8", errors="ignore") as file:
                 self.gcode = file.readlines()
             
-            # Ensure T0 is placed after "; Executable_black_start"
+            # Ensure T0 is placed after "; Executable_block_start"
             for i, line in enumerate(self.gcode):
-                if line.strip() == "; Executable_black_start":
+                if line.strip() == "; Executable_block_start":
                     self.gcode.insert(i + 1, "T0 ; Set primary extruder\n")
                     break
         except Exception as e:
@@ -64,7 +64,7 @@ class GXWriter:
             elif line.startswith('; layer_height ='):
                 self.layer_height = int(float(line.split('=')[1].strip()) * 1000)
             elif line.startswith('; machine_max_speed_x ='):
-                self.print_speed = int(line.split('=')[1].strip())
+                self.print_speed = int(line.split('=')[1].strip().split(',')[1].strip())
             elif line.startswith('; first_layer_bed_temperature ='):
                 self.bed_temp = int(line.split('=')[1].strip())
             elif line.startswith('; nozzle_temperature ='):
